@@ -1,0 +1,12 @@
+#!/bin/bash
+
+set -euo pipefail
+
+GATEWAY_WORKDIR="${GITSYNC_ROOT:-}/.worktrees/${GITSYNC_HASH:-}"
+GATEWAY_CONFIG_PATH="${GATEWAY_CONFIG_PATH:?Gateway config path variable is required}"
+GATEWAY_CONFIG_PATH="${GATEWAY_CONFIG_PATH#/}" # strip the leading slash
+GATEWAY_CONFIG_PATH="${GATEWAY_CONFIG_PATH%/}" # strip the trailing slash
+
+SOURCE_DIR="${GATEWAY_WORKDIR}/${GATEWAY_CONFIG_PATH}"
+TARGET_DIR="/etc/traefik"
+rsync -avq --delete "$SOURCE_DIR/" "$TARGET_DIR/"

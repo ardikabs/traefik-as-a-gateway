@@ -1,0 +1,57 @@
+log:
+  level: INFO
+  noColor: true
+  format: json
+
+api:
+  insecure: true
+
+accessLog:
+  format: json
+
+serversTransport:
+  maxIdleConnsPerHost: 100
+
+entryPoints:
+  fallbac:
+    address: :10080
+    asDefault: true
+
+  traefik:
+    address: ":8080"
+
+  ping:
+    address: ":8000"
+
+  redirect:
+    address: ":9000"
+
+  web:
+    address: ":80"
+    http:
+      middlewares:
+        - force-secure
+    http2:
+      maxConcurrentStreams: 250
+    transport:
+      lifeCycle:
+        graceTimeOut: "0s"
+        requestAcceptGraceTimeout: "60s"
+      respondingTimeouts:
+        idleTimeout: "180s"
+        readTimeout: "180s"
+        writeTimeout: "180s"
+      keepAliveMaxRequests: 0
+      keepAliveMaxTime: 0s
+
+ping:
+  entryPoint: "ping"
+
+providers:
+  file:
+    directory: "/etc/traefik/conf.d"
+    watch: true
+  docker:
+    defaultRule: "Host(`{{ normalize .ContainerName }}.local`)"
+    endpoint: "unix:///var/run/docker.sock"
+    exposedByDefault: false

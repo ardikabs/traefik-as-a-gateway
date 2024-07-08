@@ -1,0 +1,26 @@
+#!/bin/bash
+
+set -euo pipefail
+
+# Whether git-sync should be enabled or not
+if [ "${ENABLE_GITSYNC:-0}" != "0" ]; then
+  echo >&2 "Starting git-sync for $GITSYNC_REPO"
+
+  # Perform an initial git-sync to ensure the repository is up-to-date
+  git-sync --one-time || exit 2
+
+  # Start git-sync in the background
+  git-sync &
+  # Save the git-sync background process PID to a file, it will be used later on by the healthcheck script
+  echo "$!" >/tmp/gitsync.pid
+fi
+
+# Prepend the traefik command to any existing command-line arguments
+set -- traefik "$@"
+
+# Display the full command that will be executed
+printf "Running command: %s\n" "$*"
+
+# Use exec to start traefik,
+# which allows traefik run as the main PID of the script
+exec "$@"

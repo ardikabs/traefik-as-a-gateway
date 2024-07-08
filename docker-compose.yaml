@@ -1,0 +1,37 @@
+version: "3.9"
+
+services:
+  traefik:
+    container_name: gateway
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    command:
+      - --configfile
+      - /etc/traefik/traefik.yaml
+    env_file:
+      - .env
+    ports:
+      - "80:80" # Exposes port 80 for web
+      - "8000:8000" # Exposes port 8000 for ping (health probe)
+      - "8080:8080" # Exposes port 8080 for the dashboard/api
+      - "9000:9000" # Exposes port 9000 for fallback
+    volumes:
+      - "./envs/staging/traefik.yaml:/etc/traefik/traefik.yaml"
+      - "./envs/staging/conf.d:/etc/traefik/conf.d"
+      - "/var/run/docker.sock:/var/run/docker.sock" # Allows Traefik to interact with Docker
+
+  echoserver:
+    image: containous/whoami
+    container_name: echoserver
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.services.echoserver.loadbalancer.server.port=80"
+
+  echo-basic:
+    image: containous/whoami
+    container_name: echo-basic
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.services.echo-basic.loadbalancer.server.port=80"

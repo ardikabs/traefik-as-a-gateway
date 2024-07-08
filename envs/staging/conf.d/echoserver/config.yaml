@@ -1,0 +1,7 @@
+http:
+  routers:
+    echoserver-main:
+      entryPoints:
+        - web
+      rule: "Host(`api.staging.ardikabs.com`) && PathPrefix(`/echo`) && Header(`X-Health-Check`, `echo`)"
+      service: echoserver@docker

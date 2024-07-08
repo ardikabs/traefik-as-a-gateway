@@ -1,0 +1,7 @@
+http:
+  routers:
+    echo-basic-main:
+      entryPoints:
+        - web
+      rule: "Host(`api.staging.ardikabs.com`) && PathPrefix(`/echo-basic`)"
+      service: echo-basic@docker

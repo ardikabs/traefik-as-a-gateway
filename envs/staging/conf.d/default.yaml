@@ -1,0 +1,36 @@
+http:
+  middlewares:
+    force-secure:
+      headers:
+        forceSTSHeader: true
+        stsSeconds: 31536000
+        stsIncludeSubdomains: true
+        stsPreload: true
+        frameDeny: true
+        browserXssFilter: true
+        contentTypeNosniff: true
+        referrerPolicy: "same-origin"
+        customRequestHeaders:
+          X-Forwarded-Proto: "https"
+          X-Forwarded-Port: "443"
+
+    redirect-to-https:
+      redirectRegex:
+        regex: "^http://(.*)"
+        replacement: "https://$1"
+        permanent: false
+
+    omit-prefix-api:
+      stripPrefix:
+        prefixes:
+          - "/api"
+
+  routers:
+    redirect-all:
+      rule: HostRegexp(`.*`)
+      service: noop@internal
+      entrypoints:
+        - redirect
+      middlewares:
+        - redirect-to-https@file
+      priority: 1
