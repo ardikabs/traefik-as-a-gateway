@@ -17,7 +17,8 @@ Changes to traffic management are initially made through the `File` provider. Th
 
 ### Consideration
 
-The **_Platform_** provider has been effective in automatically creating routers on demand. However, it lacks support for specific scenarios, such as implementing **Weighted Canary** strategies that distribute traffic based on a ratio across different upstreams. This functionality is available in the `File` provider. Consequently, there is a need to integrate the `File` provider's capabilities for handling such scenarios with the **_Platform_** provider's ability to manage upstream auto-discovery. This integration will enable the manipulation of traffic for various use cases, including **Weighted Canary**, **A/B Testing**, and more.
+The **_Platform_** provider has been effective in automatically creating routers on demand. However, it lacks support for specific scenarios, such as implementing **Weighted Canary** strategies that distribute traffic based on a ratio across different upstreams. This functionality is available in the `File` provider.
+Hence, there is a need to have the `File` provider's capabilities for handling such scenarios, then combined with the **_Platform_** provider's ability to manage upstream auto-discovery. This integration will enable the manipulation of traffic for various use cases, including **Weighted Canary**, **A/B Testing**, and more.
 
 ## Infrastructure Setup
 
